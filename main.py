@@ -5,6 +5,13 @@ import requests
 base_url = 'https://na1.api.riotgames.com/lol/'
 global summoners
 summoners = {}
+
+def lastMatchMessage(discordUser, match):
+    message = DISCORD_USER + '\'s last match was a ' 
+        + MATCH_TYPE + 'match.' DISCORD_USER + WON/LOST 
+        + ' the match. Their KDA was ' + PARTICIPANT_KDA
+        
+        return message
 def getLastMatch(account_id):
     match = requests.get(base_url + 'match/v3/matches/' + str((requests.get(base_url + 'match/v3/matchlists/by-account/'
                         + account_id + '/recent?api_key=RGAPI-03794653-30ed-48c1-a60b-db4fed864aa9').json()['matches'][0]['gameId']))
@@ -24,6 +31,22 @@ def messageTokenizor(message):
     tokens = nltk.word_tokenize(message)
     return tokens
     
+def getParticipantStats(match, participantID):
+	match['participants'][participantID - 1]
+	
+def getParticipantKDA(stats)):
+	message = stats['kills'] + '/' stats['deaths'] + '/' + stats['assists']
+	return message
+	
+def getTeamResults(match):
+	return match['teams']
+
+def getParticipantID(match, accountID):
+     message = str()
+     for j in range(len(match['participantIdentities'])):
+     	if match['participantIdentities'][j]['player']['accountId'] == accountID:
+              return match['participantIdentities'][j]['participantId']
+	        
 client = discord.Client()
 
 @client.event
@@ -41,7 +64,7 @@ async def on_message(message):
     if message.content.startswith('!lastMatch'):
         text = messageTokenizor(message.content)
         print(summoners[str(message.author)]['accountId'])
-        print(str(getLastMatch(str(summoners[str(message.author)]['accountId']))))
+        await client.send_message(message.channel, lastMatchMessage(message.author, getLastMatch())
     if message.content.startswith('!register'):
         text = messageTokenizor(message.content)
         registerSummoner(getSummoner(text[2]), str(message.author))
