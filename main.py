@@ -10,7 +10,35 @@ summonerMatches = {}
 
 def lastMatchMessage(DISCORD_USER, userID, match):
     teamID = getTeam(match, summoners[DISCORD_USER]['accountId'])
-    stats = getParticipantStats(match, getParticipantID(match, summoners[DISCORD_USER]['accountId'])) 
+    stats = getParticipantStats(match, getParticipantID(match, summoners[DISCORD_USER]['accountId']))
+    
+    embed=discord.Embed(title='__**' + (summoners[DISCORD_USER]['name'] + '\'s Last Match Summary:**__'), description=('<@' + userID + '>' + ', here\'s a quick overview of that last match!'), color=0x0ee796)
+    embed.set_thumbnail(url='http://ddragon.leagueoflegends.com/cdn/6.24.1/img/profileicon/' + str(summoners[DISCORD_USER]['profileIconId']) + '.png')
+    embed.add_field(name='Match Type:', value= match['gameMode'][0].upper() + match['gameMode'].lower()[1:], inline=False)
+    embed.add_field(name='Win/Loss:', value=win_lose(match, summoners[DISCORD_USER]['accountId']), inline=False)
+    embed.add_field(name='Champion Played:', value=str(getChampName(str(getSummonerChamp(match, summoners[DISCORD_USER]['accountId'])))), inline=True)
+    embed.add_field(name='Champion Level Reached:', value=str(stats['champLevel']), inline=True)
+    embed.add_field(name='K/D/A:', value=str(getParticipantKDA(getParticipantStats(match, getParticipantID(match, summoners[DISCORD_USER]['accountId'])))), inline=False)
+    embed.add_field(name='CS:', value=str(stats['totalMinionsKilled']), inline=True)
+    embed.add_field(name='Total Damage Dealt:', value=str(stats['totalDamageDealt']), inline=True)
+    embed.add_field(name='Turrets Killed:', value=str(stats['turretKills']), inline=True)
+    embed.add_field(name='Inhibitors Killed', value=str(stats['inhibitorKills']), inline=True)
+    embed.add_field(name='Double Kills:', value=str(stats['doubleKills']), inline=True)
+    embed.add_field(name='Triple Kills:', value=str(stats['tripleKills']), inline=True)
+    embed.add_field(name='Quadra Kills:', value=str(stats['quadraKills']), inline=True)
+    embed.add_field(name='Penta Kills:', value=str(stats['pentaKills']), inline=True)
+    embed.add_field(name='Unreal Kills:', value=str(stats['unrealKills']), inline=True)
+    embed.set_footer(text="Thanks for using League-Buddy!")
+
+    return embed
+    
+
+
+
+
+
+
+'''    
     message = ('<@' + userID + '>' + ' \'s last match was a ' + match['gameMode'].lower() + ' match. '
                + '<@' + userID + '>' + ' played as ' + str(getChampName(str(getSummonerChamp(match, summoners[DISCORD_USER]['accountId'])))) + ', and'
                + win_lose(match, summoners[DISCORD_USER]['accountId']) + '. Their champion reached level ' + str(stats['champLevel']) + ', earned '
@@ -22,6 +50,9 @@ def lastMatchMessage(DISCORD_USER, userID, match):
                + DISCORD_USER[0].upper() + DISCORD_USER[1:-5] + '\'s team' + str(gotFirstTower(teamID, match))
                + grammar2(gotFirstTower(teamID, match), gotFirstBlood(teamID, match)) + gotFirstBlood(teamID, match) + '.') 
     return message
+'''
+
+
 
 def getLastMatch(account_id):
     match = requests.get(base_url + 'match/v3/matches/' + str((requests.get(base_url + 'match/v3/matchlists/by-account/'
@@ -77,8 +108,8 @@ def win_lose(match, accountId):
     for i in range(len(match['teams'])):
         if userTeam == match['teams'][i]['teamId']:
             if match['teams'][i]['win'] == 'Fail':
-                return ' lost'
-            return ' win'
+                return ' Loss'
+            return ' Win'
 
 def getSummoner(summonerName):
     summoner = requests.get(base_url + 'summoner/v3/summoners/by-name/'+ summonerName + '?api_key=RGAPI-5d68cc3e-483a-4be2-8e22-49563464bce1').json()
@@ -110,8 +141,10 @@ def getParticipantID(match, accountID):
             return match['participantIdentities'][j]['participantId']
 
 def registerMessage(discordUser, userID):
-    message = '<@' + userID + '> registered with League Buddy as level ' + str(summoners[discordUser]['summonerLevel']) + ' summoner ' + str(summoners[discordUser]['name']) + '.'
-    return message
+    #message = '<@' + userID + '> registered with League Buddy as level ' + str(summoners[discordUser]['summonerLevel']) + ' summoner ' + str(summoners[discordUser]['name']) + '.'
+    embed=discord.Embed(title='<@' + userID + '>' + ' Registered with League-Buddy as level ' + str(summoners[discordUser]['summonerLevel']) + ' summoner.', color=0x1cead6)
+    embed.set_author(name=summoners[discordUser]['name'],icon_url='http://ddragon.leagueoflegends.com/cdn/6.24.1/img/profileicon/' + str(summoners[discordUser]['profileIconId']) + '.png')
+    return embed
 def grammar2(firstTower, firstBlood):
 	if 'not' in firstTower:
 		if 'not' in firstBlood:
@@ -139,11 +172,12 @@ async def on_ready():
 async def on_message(message):
     if message.content.startswith('!lastMatch'):
         text = messageTokenizor(message.content)
-        await client.send_message(message.channel, lastMatchMessage(str(message.author), str(message.author.id), getLastMatch(str(summoners[str(message.author)]['accountId']))))
+        await client.send_message(message.channel, embed=lastMatchMessage(str(message.author), str(message.author.id), getLastMatch(str(summoners[str(message.author)]['accountId']))))
+        #await client.send_message(message.channel, lastMatchMessage(str(message.author), str(message.author.id), getLastMatch(str(summoners[str(message.author)]['accountId']))))
     if message.content.startswith('!register'):
         text = messageTokenizor(message.content)
         registerSummoner(getSummoner(text[2]), str(message.author))
-        await client.send_message(message.channel, registerMessage(str(message.author), str(message.author.id)))
+        await client.send_message(message.channel, embed=registerMessage(str(message.author), str(message.author.id)))
         
 #Discord Bot Authentication data
 client.run('NDE4NDE5NDc0MDM5OTYzNjYw.DXhTLg.BxfBe-w4fBriT0tLtY5IUcCZeTs')
