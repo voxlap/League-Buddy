@@ -3,6 +3,7 @@ import nltk
 import requests
 
 base_url = 'https://na1.api.riotgames.com/lol/'
+LoLkey = 'RGAPI-bad08388-070d-4b8f-b726-f648ff6930d8'
 global summoners
 summoners = {}
 summonerMatches = {}
@@ -14,7 +15,8 @@ def lastMatchMessage(DISCORD_USER, userID, match):
     
     embed=discord.Embed(title='__**' + (summoners[DISCORD_USER]['name'] + '\'s Last Match Summary:**__'), description=('<@' + userID + '>' + ', here\'s a quick overview of that last match!'), color=0x0ee796)
     embed.set_thumbnail(url='http://ddragon.leagueoflegends.com/cdn/6.24.1/img/profileicon/' + str(summoners[DISCORD_USER]['profileIconId']) + '.png')
-    embed.add_field(name='Match Type:', value= match['gameMode'][0].upper() + match['gameMode'].lower()[1:], inline=False)
+    embed.add_field(name='Game Mode:', value= match['gameMode'][0].upper() + match['gameMode'].lower()[1:], inline=True)
+    embed.add_field(name='Match Type:', value= match['gameType'][0].upper() + match['gameType'].lower()[1:], inline=True)
     embed.add_field(name='Win/Loss:', value=win_lose(match, summoners[DISCORD_USER]['accountId']), inline=False)
     embed.add_field(name='Champion Played:', value=str(getChampName(str(getSummonerChamp(match, summoners[DISCORD_USER]['accountId'])))), inline=True)
     embed.add_field(name='Champion Level Reached:', value=str(stats['champLevel']), inline=True)
@@ -56,8 +58,8 @@ def lastMatchMessage(DISCORD_USER, userID, match):
 
 def getLastMatch(account_id):
     match = requests.get(base_url + 'match/v3/matches/' + str((requests.get(base_url + 'match/v3/matchlists/by-account/'
-                        + account_id + '/recent?api_key=RGAPI-5d68cc3e-483a-4be2-8e22-49563464bce1').json()['matches'][0]['gameId']))
-                        + '/?api_key=RGAPI-5d68cc3e-483a-4be2-8e22-49563464bce1').json()
+                        + account_id + '/recent?api_key=' + LoLkey).json()['matches'][0]['gameId']))
+                        + '/?api_key=' + LoLkey).json()
     addSummonerMatch(account_id, match)
     return match
 
@@ -66,7 +68,7 @@ def addSummonerMatch(account_id, match):
     summonerMatches[account_id].append(match)
     
 def getChampName(champID):
-    message = requests.get(base_url + 'static-data/v3/champions/' + champID + '?locale=en_US&api_key=RGAPI-5d68cc3e-483a-4be2-8e22-49563464bce1').json()
+    message = requests.get(base_url + 'static-data/v3/champions/' + champID + '?locale=en_US&api_key=' + LoLkey).json()
     return message['name']
 
 def getSummonerChamp(match, accountId):
@@ -112,7 +114,7 @@ def win_lose(match, accountId):
             return ' Win'
 
 def getSummoner(summonerName):
-    summoner = requests.get(base_url + 'summoner/v3/summoners/by-name/'+ summonerName + '?api_key=RGAPI-5d68cc3e-483a-4be2-8e22-49563464bce1').json()
+    summoner = requests.get(base_url + 'summoner/v3/summoners/by-name/'+ summonerName + '?api_key=' + LoLkey).json()
     return summoner
 
 def registerSummoner(summoner, discordID):
