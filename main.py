@@ -7,9 +7,10 @@ LoLkey = 'RGAPI-bad08388-070d-4b8f-b726-f648ff6930d8'
 global summoners
 summoners = {}
 summonerMatches = {}
+champEmojis = {}
+client = discord.Client()
 
-
-def lastMatchMessage(DISCORD_USER, userID, match):
+def lastMatchMessage(DISCORD_USER, server, userID, match):
     teamID = getTeam(match, summoners[DISCORD_USER]['accountId'])
     stats = getParticipantStats(match, getParticipantID(match, summoners[DISCORD_USER]['accountId']))
     
@@ -18,7 +19,8 @@ def lastMatchMessage(DISCORD_USER, userID, match):
     embed.add_field(name='Game Mode:', value= match['gameMode'][0].upper() + match['gameMode'].lower()[1:], inline=True)
     embed.add_field(name='Match Type:', value= match['gameType'][0].upper() + match['gameType'].lower()[1:], inline=True)
     embed.add_field(name='Win/Loss:', value=win_lose(match, summoners[DISCORD_USER]['accountId']), inline=False)
-    embed.add_field(name='Champion Played:', value=str(getChampName(str(getSummonerChamp(match, summoners[DISCORD_USER]['accountId'])))), inline=True)
+    print(str(getChampName(str(getSummonerChamp(match, summoners[DISCORD_USER]['accountId'])))))
+    embed.add_field(name='Champion Played:', value=(champEmoji(server, str(getChampName(str(getSummonerChamp(match, summoners[DISCORD_USER]['accountId']))))) + str(getChampName(str(getSummonerChamp(match, summoners[DISCORD_USER]['accountId']))))), inline=True)
     embed.add_field(name='Champion Level Reached:', value=str(stats['champLevel']), inline=True)
     embed.add_field(name='K/D/A:', value=str(getParticipantKDA(getParticipantStats(match, getParticipantID(match, summoners[DISCORD_USER]['accountId'])))), inline=False)
     embed.add_field(name='CS:', value=str(stats['totalMinionsKilled']), inline=True)
@@ -34,12 +36,6 @@ def lastMatchMessage(DISCORD_USER, userID, match):
 
     return embed
     
-
-
-
-
-
-
 '''    
     message = ('<@' + userID + '>' + ' \'s last match was a ' + match['gameMode'].lower() + ' match. '
                + '<@' + userID + '>' + ' played as ' + str(getChampName(str(getSummonerChamp(match, summoners[DISCORD_USER]['accountId'])))) + ', and'
@@ -55,6 +51,20 @@ def lastMatchMessage(DISCORD_USER, userID, match):
 '''
 
 
+
+def champEmoji(server, userChamp):
+    if userChamp not in champEmojis.keys():
+        return makeChampionEmoji(server, userChamp)
+    return '<:'+ str(userChamp) + ':' + str(champEmojis[userChamp]) + ':>' 
+
+def makeChampionEmoji(server, userChamp):
+    url = str('http://ddragon.leagueoflegends.com/cdn/6.24.1/img/champion/' + str(userChamp) + '.png')
+    print(url)
+    
+    client.create_custom_emoji(server=server, name=userChamp, image=url)
+    print(server.emojis)
+    champEmojis[userChamp] = server.emojis
+    return '<:'+ str(userChamp) + ':' + str(champEmojis[userChamp]) + ':>'
 
 def getLastMatch(account_id):
     match = requests.get(base_url + 'match/v3/matches/' + str((requests.get(base_url + 'match/v3/matchlists/by-account/'
@@ -158,7 +168,7 @@ def grammar(firstBlood):
     if 'not' in firstBlood:
         return ' but'
     return ' and'
-client = discord.Client()
+
 
 @client.event
 #Console Feedback
@@ -174,8 +184,9 @@ async def on_ready():
 async def on_message(message):
     if message.content.startswith('!lastMatch'):
         text = messageTokenizor(message.content)
-        await client.send_message(message.channel, embed=lastMatchMessage(str(message.author), str(message.author.id), getLastMatch(str(summoners[str(message.author)]['accountId']))))
+        await client.send_message(message.channel, embed=lastMatchMessage(str(message.author), message.server, str(message.author.id), getLastMatch(str(summoners[str(message.author)]['accountId']))))
         #await client.send_message(message.channel, lastMatchMessage(str(message.author), str(message.author.id), getLastMatch(str(summoners[str(message.author)]['accountId']))))
+
     if message.content.startswith('!register'):
         text = messageTokenizor(message.content)
         registerSummoner(getSummoner(text[2]), str(message.author))
