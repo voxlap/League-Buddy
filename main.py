@@ -8,30 +8,19 @@ summoners = {}
 summonerMatches = {}
 
 
-
-
-
-
-def damageDealt(stats):
-	totalDamage = stats['totalDamageDealt']
-	return totalDamage
-def csScore(stats):
-	return stats['totalMinionsKilled']
-def goldEarned(stats):
-	return stats['goldEarned']
-def turretKills(stats):
-	return stats['turretKills']
-def inhibitorKills(stats):
-	stats['inhibitorKills']
-
-	"goldSpent":6650,"turretKills":0,"inhibitorKills":0,"totalMinionsKilled":83
 def lastMatchMessage(DISCORD_USER, userID, match):
     teamID = getTeam(match, summoners[DISCORD_USER]['accountId'])
-    stats = 
-    message = ('<@' + userID + '>' + ' \'s last match was a ' + match['gameMode'] + ' match. '
-               + DISCORD_USER[:-5] + ' played as ' + str(getChampName(str(getSummonerChamp(match, summoners[DISCORD_USER]['accountId'])))) + ', and' + win_lose(match, summoners[DISCORD_USER]['accountId'])
-               + '. Their KDA was ' + str(getParticipantKDA(getParticipantStats(match, getParticipantID(match, summoners[DISCORD_USER]['accountId'])))) + '. '
-               + DISCORD_USER[:-5] + '\'s team' + str(gotFirstTower(teamID, match)) + grammar2(gotFirstTower(teamID, match), gotFirstBlood(teamID, match)) + gotFirstBlood(teamID, match) + '.') 
+    stats = getParticipantStats(match, getParticipantID(match, summoners[DISCORD_USER]['accountId'])) 
+    message = ('<@' + userID + '>' + ' \'s last match was a ' + match['gameMode'].lower() + ' match. '
+               + '<@' + userID + '>' + ' played as ' + str(getChampName(str(getSummonerChamp(match, summoners[DISCORD_USER]['accountId'])))) + ', and'
+               + win_lose(match, summoners[DISCORD_USER]['accountId']) + '. Their champion reached level ' + str(stats['champLevel']) + ', earned '
+               + str(stats['goldEarned']) + ' gold, had a CS of ' + str(stats['totalMinionsKilled']) + ', dealt ' + str(stats['totalDamageDealt'])
+               + ' damage, killed ' + str(stats['turretKills']) + ' turrets, killed ' + str(stats['inhibitorKills']) + ' inhibitors, achieved '
+               + str(stats['doubleKills']) + ' double kills, ' + str(stats['tripleKills']) + ' triple kills, ' + str(stats['quadraKills'])
+               + ' quadra kills, ' + str(stats['pentaKills']) + ' penta kills, and ' + str(stats['unrealKills']) + ' unreal kills. Their KDA was '
+               + str(getParticipantKDA(getParticipantStats(match, getParticipantID(match, summoners[DISCORD_USER]['accountId'])))) + '. '
+               + DISCORD_USER[0].upper() + DISCORD_USER[1:-5] + '\'s team' + str(gotFirstTower(teamID, match))
+               + grammar2(gotFirstTower(teamID, match), gotFirstBlood(teamID, match)) + gotFirstBlood(teamID, match) + '.') 
     return message
 
 def getLastMatch(account_id):
@@ -44,7 +33,7 @@ def getLastMatch(account_id):
 def addSummonerMatch(account_id, match):
     summonerMatches[account_id] = []
     summonerMatches[account_id].append(match)
-    print(summonerMatches)
+    
 def getChampName(champID):
     message = requests.get(base_url + 'static-data/v3/champions/' + champID + '?locale=en_US&api_key=RGAPI-5d68cc3e-483a-4be2-8e22-49563464bce1').json()
     return message['name']
@@ -71,7 +60,6 @@ def gotFirstTower(teamID, match):
 
 def gotFirstBlood(teamID, match):
     for i in range(len(match['teams'])):
-        print(match['teams'][i]['teamId'])
         if match['teams'][i]['teamId'] == teamID:
             if match['teams'][i]['firstBlood'] == True:
                 return ' got first blood'
