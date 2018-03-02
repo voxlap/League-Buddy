@@ -1,5 +1,5 @@
 [Get League-Buddy!](https://discordapp.com/api/oauth2/authorize?client_id=419157772421300235&permissions=384000&scope=bot)
-![logo](https://raw.githubusercontent.com/voxlap/League-Discord-Buddy/master/sunglasses.jpg)
+[![logo](https://raw.githubusercontent.com/voxlap/League-Discord-Buddy/master/sunglasses.png)](https://discordapp.com/api/oauth2/authorize?client_id=419157772421300235&permissions=384000&scope=bot)
 
 
 
