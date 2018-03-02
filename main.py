@@ -1,6 +1,11 @@
 import discord
 import nltk
 import requests
+from PIL import Image
+import requests
+from io import BytesIO
+
+
 
 base_url = 'https://na1.api.riotgames.com/lol/'
 LoLkey = 'RGAPI-bad08388-070d-4b8f-b726-f648ff6930d8'
@@ -20,7 +25,7 @@ def lastMatchMessage(DISCORD_USER, server, userID, match):
     embed.add_field(name='Match Type:', value= match['gameType'][0].upper() + match['gameType'].lower()[1:], inline=True)
     embed.add_field(name='Win/Loss:', value=win_lose(match, summoners[DISCORD_USER]['accountId']), inline=False)
     print(str(getChampName(str(getSummonerChamp(match, summoners[DISCORD_USER]['accountId'])))))
-    embed.add_field(name='Champion Played:', value=(champEmoji(server, str(getChampName(str(getSummonerChamp(match, summoners[DISCORD_USER]['accountId']))))) + str(getChampName(str(getSummonerChamp(match, summoners[DISCORD_USER]['accountId']))))), inline=True)
+    embed.add_field(name='Champion Played:', value= (str(getChampName(str(getSummonerChamp(match, summoners[DISCORD_USER]['accountId']))))), inline=True)
     embed.add_field(name='Champion Level Reached:', value=str(stats['champLevel']), inline=True)
     embed.add_field(name='K/D/A:', value=str(getParticipantKDA(getParticipantStats(match, getParticipantID(match, summoners[DISCORD_USER]['accountId'])))), inline=False)
     embed.add_field(name='CS:', value=str(stats['totalMinionsKilled']), inline=True)
@@ -32,11 +37,72 @@ def lastMatchMessage(DISCORD_USER, server, userID, match):
     embed.add_field(name='Quadra Kills:', value=str(stats['quadraKills']), inline=True)
     embed.add_field(name='Penta Kills:', value=str(stats['pentaKills']), inline=True)
     embed.add_field(name='Unreal Kills:', value=str(stats['unrealKills']), inline=True)
-    embed.set_footer(text="Thanks for using League-Buddy!")
+    embed.set_footer(text='Thanks for using League-Buddy!')
 
     return embed
+
+
+def lastMatchTeamMessage(match, teamID, userID):
+    embed=discord.Embed(title='**Summoner\'s Team Performance:**', description='<@' + userID + '>' + '\'s team statistics during their last match', color=0x1cead6)
+    embed.add_field(name='Kills', value=totalTeamKills(match, teamID), inline=True)
+    embed.add_field(name='Deaths', value=totalTeamDeaths(match, teamID), inline=True)
+    embed.add_field(name='Towers Killed', value=totalTeamTowerKills(match, teamID), inline=False)
+    embed.add_field(name='Inhibitor Kills', value=totalTeamInhibitorKills(match, teamID), inline=True)
+    embed.add_field(name='Dragons Killed', value=totalTeamDragonKills(match, teamID), inline=True)
+    embed.add_field(name='Barons Killed', value=totalTeamBaronKills(match, teamID), inline=True)
+    embed.add_field(name='Rift Herald Kills', value=totalTeamRiftHeraldKills(match, teamID), inline=True)
+    embed.add_field(name='Vilemaws Killed', value=totalTeamVilemawKills(match, teamID), inline=True)
+
+    return embed
+
+def totalTeamKills(match, teamID):
+    kills = 0
+    for i in range(len(match['participants'])):
+        if match['participants'][i]['teamId'] == teamID:
+            kills += match['participants'][i]['stats']['kills']
+    return kills
+                        
+def totalTeamDeaths(match, teamID):
+    deaths = 0
+    for i in range(len(match['participants'])):
+        if match['participants'][i]['teamId'] == teamID:
+            deaths += match['participants'][i]['stats']['deaths']
+    return deaths
+                        
+def totalTeamTowerKills(match, teamID):
+    for i in range(len(match['teams'])):
+        if match['teams'][i]['teamId'] == teamID:
+            return match['teams'][i]['towerKills']
+                        
+def totalTeamInhibitorKills(match, teamID):
+    for i in range(len(match['teams'])):
+        if match['teams'][i]['teamId'] == teamID:
+            return match['teams'][i]['inhibitorKills']
+                        
+def totalTeamDragonKills(match, teamID):
+   for i in range(len(match['teams'])):
+        if match['teams'][i]['teamId'] == teamID:
+            return match['teams'][i]['dragonKills']
+            
+def totalTeamBaronKills(match, teamID):
+    for i in range(len(match['teams'])):
+        if match['teams'][i]['teamId'] == teamID:
+            return match['teams'][i]['baronKills']
+                        
+def totalTeamRiftHeraldKills(match, teamID):
+    for i in range(len(match['teams'])):
+        if match['teams'][i]['teamId'] == teamID:
+            return match['teams'][i]['riftHeraldKills']
+                        
+def totalTeamVilemawKills(match, teamID):
+    for i in range(len(match['teams'])):
+        if match['teams'][i]['teamId'] == teamID:
+            return match['teams'][i]['vilemawKills']
     
-'''    
+'''
+
+(champEmoji(server, str(getChampName(str(getSummonerChamp(match, summoners[DISCORD_USER]['accountId'])))))
+
     message = ('<@' + userID + '>' + ' \'s last match was a ' + match['gameMode'].lower() + ' match. '
                + '<@' + userID + '>' + ' played as ' + str(getChampName(str(getSummonerChamp(match, summoners[DISCORD_USER]['accountId'])))) + ', and'
                + win_lose(match, summoners[DISCORD_USER]['accountId']) + '. Their champion reached level ' + str(stats['champLevel']) + ', earned '
@@ -59,9 +125,9 @@ def champEmoji(server, userChamp):
 
 def makeChampionEmoji(server, userChamp):
     url = str('http://ddragon.leagueoflegends.com/cdn/6.24.1/img/champion/' + str(userChamp) + '.png')
-    print(url)
-    
-    client.create_custom_emoji(server=server, name=userChamp, image=url)
+    response = requests.get(url)
+    img = Image.open(BytesIO(response.content))
+    server.create_custom_emoji(server=server, name=userChamp, image=img)
     print(server.emojis)
     champEmojis[userChamp] = server.emojis
     return '<:'+ str(userChamp) + ':' + str(champEmojis[userChamp]) + ':>'
@@ -182,14 +248,19 @@ async def on_ready():
 @client.event
 #Messages channel when given certain commands
 async def on_message(message):
-    if message.content.startswith('!lastMatch'):
+    if message.content.startswith('!lb last match report'):
         text = messageTokenizor(message.content)
         await client.send_message(message.channel, embed=lastMatchMessage(str(message.author), message.server, str(message.author.id), getLastMatch(str(summoners[str(message.author)]['accountId']))))
         #await client.send_message(message.channel, lastMatchMessage(str(message.author), str(message.author.id), getLastMatch(str(summoners[str(message.author)]['accountId']))))
-
-    if message.content.startswith('!register'):
+    if message.content.startswith('!lb last match team'):
+        accountID = str(summoners[str(message.author)]['accountId'])
+        match = getLastMatch(accountID)
+        teamID = getTeam(match, summoners[str(message.author)]['accountId'])
+        
+        await client.send_message(message.channel, embed=lastMatchTeamMessage(match, teamID, message.author.id))
+    if message.content.startswith('!lb register'):
         text = messageTokenizor(message.content)
-        registerSummoner(getSummoner(text[2]), str(message.author))
+        registerSummoner(getSummoner(text[3]), str(message.author))
         await client.send_message(message.channel, embed=registerMessage(str(message.author), str(message.author.id)))
         
 #Discord Bot Authentication data
