@@ -4,7 +4,7 @@
 League-Buddy is a discord bot designed to help summoners monitor their gameplay improvements over time, by automatically sending messages to specified Discord server channels whenever a registered user in that server completes a match
 # Commands
  **Commands**                | **Description**                                                      
------------------------------|:---------------------------------------------------------------------
+---|:---
 [!lb register [summoner name]](https://raw.githubusercontent.com/voxlap/League-Discord-Buddy/master/register.png) |Registers discord user with summoner
 [!lb change summoner [summoner name]]()|Changes user's registered summoner
 [!lb summoner]()|Shows summoners stats, including level, region, rank, and win rate||
