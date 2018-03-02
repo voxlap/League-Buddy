@@ -1,4 +1,4 @@
-[Invite League-Buddy!]()
+[Invite League-Buddy!](https://discordapp.com/api/oauth2/authorize?client_id=419157772421300235&permissions=384000&scope=bot)
 
 # About
 League-Buddy is a discord bot designed to help summoners monitor their gameplay improvements over time, by automatically sending messages to specified Discord server channels whenever a registered user in that server completes a match
@@ -11,3 +11,5 @@ League-Buddy is a discord bot designed to help summoners monitor their gameplay 
 
 # Contact
 Contact me on Discord at voxlap#0194, email me at voxlap@gmail.com, or join the [League-Buddy Support server]()!
+
+<iframe src="https://discordapp.com/widget?id=419215133747707905&theme=dark" width="350" height="500" allowtransparency="true" frameborder="0"></iframe>
