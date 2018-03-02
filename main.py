@@ -5,10 +5,9 @@ from PIL import Image
 import requests
 from io import BytesIO
 
-
-
 base_url = 'https://na1.api.riotgames.com/lol/'
-LoLkey = 'RGAPI-bad08388-070d-4b8f-b726-f648ff6930d8'
+with open('Lolkey.txt', 'r+') as myfile:
+    LoLkey = str(myfile.read())
 global summoners
 summoners = {}
 summonerMatches = {}
