@@ -8,7 +8,6 @@ from io import BytesIO
 base_url = 'https://na1.api.riotgames.com/lol/'
 with open('Lolkey.txt', 'r+') as myfile:
     LoLkey = str(myfile.read())
-global summoners
 summoners = {}
 summonerMatches = {}
 champEmojis = {}
@@ -17,11 +16,15 @@ summonerRegion = {}
 with open('discordToken.txt', 'r+') as myfile:
     token = str(myfile.read())
 
+#################################
+#           MESSAGES            #
+#################################
+
     
 def summonerStats(discordUser, userID):
     league = requests.get('https://na1.api.riotgames.com/lol/league/v3/positions/by-summoner/'+ str(summoners[discordUser]['id']) + '?api_key=' + LoLkey).json()[0]
     regionCode = 'NA'
-    embed=discord.Embed(title='**Summoner Profile: ' + summoners[discordUser]['name'] +'**')
+    embed=discord.Embed(title='**Summoner Profile: ' + summoners[discordUser]['name'] +'**', color=0x0ee796)
     embed.set_thumbnail(url='http://ddragon.leagueoflegends.com/cdn/6.24.1/img/profileicon/' + str(summoners[discordUser]['profileIconId']) + '.png')
     embed.add_field(name='Summoner Level', value=summoners[discordUser]['summonerLevel'], inline=False)
     embed.add_field(name='Rank', value=league['tier'] + ' ' + league['rank'] + ', ' + str(league['wins']) + 'W/' + str(league['losses']) + 'L', inline=True)
@@ -54,9 +57,8 @@ def lastMatchMessage(DISCORD_USER, server, userID, match):
 
     return embed
 
-
 def lastMatchTeamMessage(match, teamID, userID):
-    embed=discord.Embed(title='**Summoner\'s Team Performance:**', description='<@' + userID + '>' + '\'s team statistics during their last match', color=0x1cead6)
+    embed=discord.Embed(title='**Summoner\'s Team Performance:**', description='<@' + userID + '>' + '\'s team statistics during their last match', color=0x0ee796)
     embed.add_field(name='Kills', value=totalTeamKills(match, teamID), inline=True)
     embed.add_field(name='Deaths', value=totalTeamDeaths(match, teamID), inline=True)
     embed.add_field(name='Towers Killed', value=totalTeamTowerKills(match, teamID), inline=False)
@@ -67,6 +69,21 @@ def lastMatchTeamMessage(match, teamID, userID):
     embed.add_field(name='Vilemaws Killed', value=totalTeamVilemawKills(match, teamID), inline=True)
 
     return embed
+
+def registerMessage(discordUser, userID):
+    embed=discord.Embed(description='<@' + userID + '>' + ' Registered with League-Buddy as level ' + str(summoners[discordUser]['summonerLevel']) + ' summoner.', color=0x0ee796)
+    embed.set_author(name=summoners[discordUser]['name'],icon_url='http://ddragon.leagueoflegends.com/cdn/6.24.1/img/profileicon/' + str(summoners[discordUser]['profileIconId']) + '.png')
+    return embed
+
+def changeSummonerMessage(discordUser, userID):
+    embed=discord.Embed(description='<@' + userID + '>' + ' League-Buddy summoner changed', color=0x0ee796)
+    embed.set_author(name=summoners[discordUser]['name'],icon_url='http://ddragon.leagueoflegends.com/cdn/6.24.1/img/profileicon/' + str(summoners[discordUser]['profileIconId']) + '.png')
+    return embed
+
+#################################
+#           TEAM                #
+#################################
+
 
 def totalTeamKills(match, teamID):
     kills = 0
@@ -112,48 +129,6 @@ def totalTeamVilemawKills(match, teamID):
         if match['teams'][i]['teamId'] == teamID:
             return match['teams'][i]['vilemawKills']
 
-def champEmoji(server, userChamp):
-    if userChamp not in champEmojis.keys():
-        return makeChampionEmoji(server, userChamp)
-    return '<:'+ str(userChamp) + ':' + str(champEmojis[userChamp]) + ':>' 
-
-def makeChampionEmoji(server, userChamp):
-    url = str('http://ddragon.leagueoflegends.com/cdn/6.24.1/img/champion/' + str(userChamp) + '.png')
-    response = requests.get(url)
-    img = Image.open(BytesIO(response.content))
-    server.create_custom_emoji(server=server, name=userChamp, image=img)
-    print(server.emojis)
-    champEmojis[userChamp] = server.emojis
-    return '<:'+ str(userChamp) + ':' + str(champEmojis[userChamp]) + ':>'
-
-def getLastMatch(account_id):
-    match = requests.get(base_url + 'match/v3/matches/' + str((requests.get(base_url + 'match/v3/matchlists/by-account/'
-                        + account_id + '/recent?api_key=' + LoLkey).json()['matches'][0]['gameId']))
-                        + '/?api_key=' + LoLkey).json()
-    addSummonerMatch(account_id, match)
-    return match
-
-def addSummonerMatch(account_id, match):
-    summonerMatches[account_id] = []
-    summonerMatches[account_id].append(match)
-    
-def getChampName(champID):
-    message = requests.get(base_url + 'static-data/v3/champions/' + champID + '?locale=en_US&api_key=' + LoLkey).json()
-    return message['name']
-
-def getSummonerChamp(match, accountId):
-    userChamp = str()
-    for i in range(len(match['participants'])):
-        if match['participants'][i]['participantId'] == getParticipantID(match, accountId):
-            userChamp = match['participants'][i]['championId']
-    return userChamp
-
-def compareLastMatch(match):
-    return
-
-def compareKDA(KDA1, KDA2):
-    return
-
 def gotFirstTower(teamID, match):
     for i in range(len(match['teams'])):
         if match['teams'][i]['teamId'] == teamID:
@@ -167,6 +142,45 @@ def gotFirstBlood(teamID, match):
             if match['teams'][i]['firstBlood'] == True:
                 return ' got first blood'
             return ' did not get first blood'
+        
+def getTeamResults(match):
+    return match['teams']
+
+#################################
+#           MATCH               #
+#################################
+
+def getLastMatch(account_id):
+    match = requests.get(base_url + 'match/v3/matches/' + str((requests.get(base_url + 'match/v3/matchlists/by-account/'
+                        + account_id + '/recent?api_key=' + LoLkey).json()['matches'][0]['gameId']))
+                        + '/?api_key=' + LoLkey).json()
+    addSummonerMatch(account_id, match)
+    return match
+
+def addSummonerMatch(account_id, match):
+    if account_id not in summonerMatches.keys():
+        summonerMatches[account_id] = []
+        summonerMatches[account_id].append(match)
+        return
+    summonerMatches[account_id].append(match)
+    return
+
+def compareLastMatch(match):
+    return
+
+def getChampName(champID):
+    message = requests.get(base_url + 'static-data/v3/champions/' + champID + '?locale=en_US&api_key=' + LoLkey).json()
+    return message['name']
+
+def getSummonerChamp(match, accountId):
+    userChamp = str()
+    for i in range(len(match['participants'])):
+        if match['participants'][i]['participantId'] == getParticipantID(match, accountId):
+            userChamp = match['participants'][i]['championId']
+    return userChamp
+
+def compareKDA(KDA1, KDA2):
+    return
 
 def getTeam(match, accountId):
     userTeam = str()
@@ -183,6 +197,11 @@ def win_lose(match, accountId):
                 return ' Loss'
             return ' Win'
 
+
+def changeSummoner(summoner, discordID):
+    summoners[discordID] = summoner 
+    print(summoners)
+
 def getSummoner(summonerName):
     summoner = requests.get(base_url + 'summoner/v3/summoners/by-name/'+ summonerName + '?api_key=' + LoLkey).json()
     return summoner
@@ -191,10 +210,6 @@ def registerSummoner(summoner, discordID):
     if discordID not in summoners:
         summoners[discordID] = summoner 
     print(summoners)
-
-def messageTokenizor(message):
-    tokens = nltk.word_tokenize(message)
-    return tokens
     
 def getParticipantStats(match, participantID):
     return match['participants'][participantID - 1]['stats']
@@ -203,31 +218,31 @@ def getParticipantKDA(stats):
     message = str(stats['kills']) + '/' + str(stats['deaths']) + '/' + str(stats['assists'])
     return message
 	
-def getTeamResults(match):
-    return match['teams']
-
 def getParticipantID(match, accountID):
     message = str()
     for j in range(len(match['participantIdentities'])):
         if match['participantIdentities'][j]['player']['accountId'] == accountID:
             return match['participantIdentities'][j]['participantId']
 
-def registerMessage(discordUser, userID):
-    #message = '<@' + userID + '> registered with League Buddy as level ' + str(summoners[discordUser]['summonerLevel']) + ' summoner ' + str(summoners[discordUser]['name']) + '.'
-    embed=discord.Embed(description='<@' + userID + '>' + ' Registered with League-Buddy as level ' + str(summoners[discordUser]['summonerLevel']) + ' summoner.', color=0x1cead6)
-    embed.set_author(name=summoners[discordUser]['name'],icon_url='http://ddragon.leagueoflegends.com/cdn/6.24.1/img/profileicon/' + str(summoners[discordUser]['profileIconId']) + '.png')
-    return embed
-def grammar2(firstTower, firstBlood):
-	if 'not' in firstTower:
-		if 'not' in firstBlood:
-			return ' and'
-		return ' but'
-	return grammar(firstBlood)
-	
-def grammar(firstBlood):
-    if 'not' in firstBlood:
-        return ' but'
-    return ' and'
+##############################################################################
+
+def champEmoji(server, userChamp):
+    if userChamp not in champEmojis.keys():
+        return makeChampionEmoji(server, userChamp)
+    return '<:'+ str(userChamp) + ':' + str(champEmojis[userChamp]) + ':>' 
+
+def makeChampionEmoji(server, userChamp):
+    url = str('http://ddragon.leagueoflegends.com/cdn/6.24.1/img/champion/' + str(userChamp) + '.png')
+    response = requests.get(url)
+    img = Image.open(BytesIO(response.content))
+    server.create_custom_emoji(server=server, name=userChamp, image=img)
+    print(server.emojis)
+    champEmojis[userChamp] = server.emojis
+    return '<:'+ str(userChamp) + ':' + str(champEmojis[userChamp]) + ':>'
+
+def messageTokenizor(message):
+    tokens = nltk.word_tokenize(message)
+    return tokens
 
 
 @client.event
@@ -257,5 +272,9 @@ async def on_message(message):
         await client.send_message(message.channel, embed=registerMessage(str(message.author), str(message.author.id)))
     if message.content.startswith('!lb summoner'):
         await client.send_message(message.channel, embed=summonerStats(str(message.author), str(message.author.id)))
+    if message.content.startswith('!lb change summoner'):
+        text = messageTokenizor(message.content)
+        changeSummoner(getSummoner(text[4]), str(message.author))
+        await client.send_message(message.channel, embed=changeSummonerMessage(str(message.author), str(message.author.id)))
 #Discord Bot Authentication data
 client.run(token)
