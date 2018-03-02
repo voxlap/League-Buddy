@@ -1,5 +1,3 @@
-# League-Buddy
-Discord bot for LoL
 # About
 League-Buddy is a discord bot designed to help summoners monitor their gameplay improvements over time, by automatically sending messages to specified Discord server channels whenever a registered user in that server completes a match
 # Commands
