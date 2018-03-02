@@ -220,7 +220,7 @@ def getParticipantID(match, accountID):
 
 def registerMessage(discordUser, userID):
     #message = '<@' + userID + '> registered with League Buddy as level ' + str(summoners[discordUser]['summonerLevel']) + ' summoner ' + str(summoners[discordUser]['name']) + '.'
-    embed=discord.Embed(title='<@' + userID + '>' + ' Registered with League-Buddy as level ' + str(summoners[discordUser]['summonerLevel']) + ' summoner.', color=0x1cead6)
+    embed=discord.Embed(description='<@' + userID + '>' + ' Registered with League-Buddy as level ' + str(summoners[discordUser]['summonerLevel']) + ' summoner.', color=0x1cead6)
     embed.set_author(name=summoners[discordUser]['name'],icon_url='http://ddragon.leagueoflegends.com/cdn/6.24.1/img/profileicon/' + str(summoners[discordUser]['profileIconId']) + '.png')
     return embed
 def grammar2(firstTower, firstBlood):
