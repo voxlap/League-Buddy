@@ -3,8 +3,8 @@ League-Buddy is a discord bot designed to help summoners monitor their gameplay 
 # Commands
 
 * !lb register [summoner name]
-  * registers discord user with summoner
+  * Registers discord user with summoner
 * !lb last match report
-  * gives summary of user's performance during their last LoL match*
+  * Gives summary of user's performance during their last LoL match
 * !lb last match team
-  * gives summary of user's team's performance during their last LoL match
+  * Gives summary of user's team's performance during their last LoL match
