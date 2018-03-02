@@ -1,5 +1,5 @@
 text
-**Commands**                | **Description**                                                      
+|**Commands**                | **Description**|                                                      
 ---|:---
 [!lb register [summoner name]](https://raw.githubusercontent.com/voxlap/League-Discord-Buddy/master/register.png)|Registers discord user with summoner
 [!lb change summoner [summoner name]](https://raw.githubusercontent.com/voxlap/League-Discord-Buddy/master/change.png)|Changes user's registered summoner
