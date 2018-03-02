@@ -12,7 +12,7 @@ League-Buddy is a discord bot designed to help summoners monitor their gameplay 
 [!lb last match team](https://raw.githubusercontent.com/voxlap/League-Discord-Buddy/master/team.png) |Gives summary of user's team's performance during their last LoL match
 
 <a href="https://raw.githubusercontent.com/voxlap/League-Discord-Buddy/master/change.png" target="_blank">!lb register [summoner name]</a>
-
+<a href="http://en.wikipedia.org/wiki/Markdown" target="_blank">markdown</a>
 
 # Contact
 Contact me on Discord at voxlap#0194, email me at voxlap@gmail.com, or join the [League-Buddy Support server](https://discord.gg/hgqmWPY)!
