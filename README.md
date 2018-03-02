@@ -5,7 +5,7 @@ League-Buddy is a discord bot designed to help summoners monitor their gameplay 
 # Commands
  **Commands**                | **Description**                                                      
 ---|:---
-[!lb register [summoner name]](https://raw.githubusercontent.com/voxlap/League-Discord-Buddy/master/register.png) |Registers discord user with summoner
+[!lb register [summoner name]](https://raw.githubusercontent.com/voxlap/League-Discord-Buddy/master/register.png){:target="_blank"} |Registers discord user with summoner
 [!lb change summoner [summoner name]](https://raw.githubusercontent.com/voxlap/League-Discord-Buddy/master/change.png)|Changes user's registered summoner
 [!lb summoner](https://raw.githubusercontent.com/voxlap/League-Discord-Buddy/master/summoner.png)|Shows summoners stats, including level, region, rank, and win rate||
 [!lb last match report](https://raw.githubusercontent.com/voxlap/League-Discord-Buddy/master/report.png)|Gives summary of user's performance during their last LoL match       
