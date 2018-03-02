@@ -1,4 +1,8 @@
 [Get League-Buddy!](https://discordapp.com/api/oauth2/authorize?client_id=419157772421300235&permissions=384000&scope=bot)
+![logo](https://raw.githubusercontent.com/voxlap/League-Discord-Buddy/master/sunglasses.png)
+
+
+
 
 # About
 League-Buddy is a discord bot designed to help summoners monitor their gameplay improvements over time, by automatically sending messages to specified Discord server channels whenever a registered user in that server completes a match
