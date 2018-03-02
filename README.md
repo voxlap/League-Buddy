@@ -1,3 +1,4 @@
+text
 **Commands**                | **Description**                                                      
 ---|:---
 [!lb register [summoner name]](https://raw.githubusercontent.com/voxlap/League-Discord-Buddy/master/register.png)|Registers discord user with summoner
