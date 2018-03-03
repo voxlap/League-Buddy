@@ -265,24 +265,24 @@ async def on_ready():
 @client.event
 #Messages channel when given certain commands
 async def on_message(message):
-    if message.content.startswith('!Lb summ lm'):
+    if message.content.startswith('lb! last match report'):
         text = messageTokenizor(message.content)
         await client.send_message(message.channel, embed=lastMatchMessage(str(message.author), message.server, str(message.author.id), getLastMatch(str(summoners[str(message.author)]['accountId']), str(message.author))))
-    if message.content.startswith('!Lb summ team lm'):
+    if message.content.startswith('lb! last match report'):
         accountID = str(summoners[str(message.author)]['accountId'])
         match = getLastMatch(accountID, str(message.author))
         teamID = getTeam(match, summoners[str(message.author)]['accountId'])
         await client.send_message(message.channel, embed=lastMatchTeamMessage(match, teamID, message.author.id))
-    if message.content.startswith('!Lb register'):
+    if message.content.startswith('lb! register'):
         text = messageTokenizor(message.content)
-        registerRegion(str(message.author), text[4])
-        registerSummoner(getSummoner(text[3], str(message.author)), str(message.author))
+        registerRegion(str(message.author), text[3])
+        registerSummoner(getSummoner(text[4], str(message.author)), str(message.author))
         await client.send_message(message.channel, embed=registerMessage(str(message.author), str(message.author.id)))
-    if message.content.startswith('!Lb summoner'):
+    if message.content.startswith('lb! summoner'):
         await client.send_message(message.channel, embed=summonerStats(str(message.author), str(message.author.id)))
-    if message.content.startswith('!Lb change summoner'):
+    if message.content.startswith('lb! change summoner'):
         text = messageTokenizor(message.content)
-        registerRegion(str(message.author), text[4])
+        registerRegion(str(message.author), text[3])
         changeSummoner(getSummoner(text[4], str(message.author)), str(message.author))
         await client.send_message(message.channel, embed=changeSummonerMessage(str(message.author), str(message.author.id)))
 #Discord Bot Authentication data
