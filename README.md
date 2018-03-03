@@ -16,11 +16,11 @@
   </thead>
   <tbody>
     <tr>
-      <td><a href="https://raw.githubusercontent.com/voxlap/League-Discord-Buddy/master/Site/register.png" target="_blank">!lb register [summoner name]</a></td>
+      <td><a href="https://raw.githubusercontent.com/voxlap/League-Discord-Buddy/master/Site/register.png" target="_blank">!lb register [summoner name][region]</a></td>
       <td style="text-align: left">Registers discord user with summoner</td>
     </tr>
     <tr>
-      <td><a href="https://raw.githubusercontent.com/voxlap/League-Discord-Buddy/master/Site/change.png" target="_blank">!lb change summoner [summoner name]</a></td>
+      <td><a href="https://raw.githubusercontent.com/voxlap/League-Discord-Buddy/master/Site/change.png" target="_blank">!lb change summoner [summoner name][region]</a></td>
       <td style="text-align: left">Changes user’s registered summoner</td>
     </tr>
     <tr>
