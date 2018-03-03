@@ -25,12 +25,14 @@ with open('discordToken.txt', 'r+') as myfile:
 def registerRegion(discordUser, region):
     if region in validRegions:
         summonerRegion[discordUser] = region
+        print(summonerRegion)
         return
     return "Not a valid region, try again"
 
 def summonerStats(discordUser, userID):
-    league = requests.get('https://' + summonerRegion[discordUser] + '.api.riotgames.com/lol/league/v3/positions/by-summoner/'+ str(summoners[discordUser]['id']) + '?api_key=' + LoLkey).json()[0]
-    regionCode = 'NA'
+    print(summonerRegion[discordUser])
+    league = requests.get('https://' + str(summonerRegion[discordUser]) + '.api.riotgames.com/lol/league/v3/positions/by-summoner/'+ str(summoners[discordUser]['id']) + '?api_key=' + LoLkey).json()[0]
+    regionCode = summonerRegion[discordUser]
     embed=discord.Embed(title='**Summoner Profile: ' + summoners[discordUser]['name'] +'**', color=0x0ee796)
     embed.set_thumbnail(url='http://ddragon.leagueoflegends.com/cdn/6.24.1/img/profileicon/' + str(summoners[discordUser]['profileIconId']) + '.png')
     embed.add_field(name='Summoner Level', value=summoners[discordUser]['summonerLevel'], inline=False)
@@ -48,7 +50,7 @@ def lastMatchMessage(DISCORD_USER, server, userID, match):
     embed.add_field(name='Game Mode:', value= match['gameMode'][0].upper() + match['gameMode'].lower()[1:], inline=True)
     embed.add_field(name='Match Type:', value= match['gameType'][0].upper() + match['gameType'].lower()[1:], inline=True)
     embed.add_field(name='Win/Loss:', value=win_lose(match, summoners[DISCORD_USER]['accountId']), inline=False)
-    embed.add_field(name='Champion Played:', value= (str(getChampName(str(getSummonerChamp(match, summoners[DISCORD_USER]['accountId']))))), inline=True)
+    embed.add_field(name='Champion Played:', value= (str(getChampName(str(getSummonerChamp(match, summoners[DISCORD_USER]['accountId'])), DISCORD_USER))), inline=True)
     embed.add_field(name='Champion Level Reached:', value=str(stats['champLevel']), inline=True)
     embed.add_field(name='K/D/A:', value=str(getParticipantKDA(getParticipantStats(match, getParticipantID(match, summoners[DISCORD_USER]['accountId'])))), inline=False)
     embed.add_field(name='CS:', value=str(stats['totalMinionsKilled']), inline=True)
@@ -65,7 +67,7 @@ def lastMatchMessage(DISCORD_USER, server, userID, match):
     return embed
 
 def lastMatchTeamMessage(match, teamID, userID):
-    embed=discord.Embed(title='**Summoner\'s Team Performance:**', description='<@' + userID + '>' + '\'s team statistics during their last match', color=0x0ee796)
+    embed=discord.Embed(title='**Summoner\'s Team Performance:**', description='<@' + userID + '>' + '\'s team\'s statistics during their last match', color=0x0ee796)
     embed.add_field(name='Kills', value=totalTeamKills(match, teamID), inline=True)
     embed.add_field(name='Deaths', value=totalTeamDeaths(match, teamID), inline=True)
     embed.add_field(name='Towers Killed', value=totalTeamTowerKills(match, teamID), inline=False)
@@ -78,7 +80,7 @@ def lastMatchTeamMessage(match, teamID, userID):
     return embed
 
 def registerMessage(discordUser, userID):
-    embed=discord.Embed(description='<@' + userID + '>' + ' Registered with League-Buddy as level ' + str(summoners[discordUser]['summonerLevel']) + ' summoner.', color=0x0ee796)
+    embed=discord.Embed(description='<@' + userID + '>' + ' Registered with League-Buddy as level ' + str(summoners[discordUser]['summonerLevel']) + ' summoner, in ' + summonerRegion[discordUser] + '.', color=0x0ee796)
     embed.set_author(name=summoners[discordUser]['name'],icon_url='http://ddragon.leagueoflegends.com/cdn/6.24.1/img/profileicon/' + str(summoners[discordUser]['profileIconId']) + '.png')
     return embed
 
@@ -157,8 +159,8 @@ def getTeamResults(match):
 #           MATCH               #
 #################################
 
-def getLastMatch(account_id):
-    match = requests.get('https://' + summonerRegion[discordUser] + base_url + 'match/v3/matches/' + str((requests.get(base_url + 'match/v3/matchlists/by-account/'
+def getLastMatch(account_id, discordUser):
+    match = requests.get('https://' + str(summonerRegion[discordUser].lower()) + base_url + 'match/v3/matches/' + str((requests.get('https://' + str(summonerRegion[discordUser].lower()) + base_url + 'match/v3/matchlists/by-account/'
                         + account_id + '/recent?api_key=' + LoLkey).json()['matches'][0]['gameId']))
                         + '/?api_key=' + LoLkey).json()
     addSummonerMatch(account_id, match)
@@ -175,7 +177,7 @@ def addSummonerMatch(account_id, match):
 def compareLastMatch(match):
     return
 
-def getChampName(champID):
+def getChampName(champID, discordUser):
     message = requests.get('https://' + summonerRegion[discordUser] + base_url + 'static-data/v3/champions/' + champID + '?locale=en_US&api_key=' + LoLkey).json()
     return message['name']
 
@@ -209,7 +211,7 @@ def changeSummoner(summoner, discordID):
     summoners[discordID] = summoner 
     print(summoners)
 
-def getSummoner(summonerName):
+def getSummoner(summonerName, discordUser):
     summoner = requests.get('https://' + summonerRegion[discordUser] + base_url + 'summoner/v3/summoners/by-name/'+ summonerName + '?api_key=' + LoLkey).json()
     return summoner
 
@@ -259,29 +261,29 @@ async def on_ready():
     print(client.user.name)
     print(client.user.id)
     print('------')
-    #await autoSetup()
     
 @client.event
 #Messages channel when given certain commands
 async def on_message(message):
-    if message.content.startswith('!lb last match report'):
+    if message.content.startswith('!Lb summ lm'):
         text = messageTokenizor(message.content)
-        await client.send_message(message.channel, embed=lastMatchMessage(str(message.author), message.server, str(message.author.id), getLastMatch(str(summoners[str(message.author)]['accountId']))))
-        #await client.send_message(message.channel, lastMatchMessage(str(message.author), str(message.author.id), getLastMatch(str(summoners[str(message.author)]['accountId']))))
-    if message.content.startswith('!lb last match team'):
+        await client.send_message(message.channel, embed=lastMatchMessage(str(message.author), message.server, str(message.author.id), getLastMatch(str(summoners[str(message.author)]['accountId']), str(message.author))))
+    if message.content.startswith('!Lb summ team lm'):
         accountID = str(summoners[str(message.author)]['accountId'])
-        match = getLastMatch(accountID)
+        match = getLastMatch(accountID, str(message.author))
         teamID = getTeam(match, summoners[str(message.author)]['accountId'])
         await client.send_message(message.channel, embed=lastMatchTeamMessage(match, teamID, message.author.id))
-    if message.content.startswith('!lb register'):
+    if message.content.startswith('!Lb register'):
         text = messageTokenizor(message.content)
-        registerSummoner(getSummoner(text[3]), str(message.author))
+        registerRegion(str(message.author), text[4])
+        registerSummoner(getSummoner(text[3], str(message.author)), str(message.author))
         await client.send_message(message.channel, embed=registerMessage(str(message.author), str(message.author.id)))
-    if message.content.startswith('!lb summoner'):
+    if message.content.startswith('!Lb summoner'):
         await client.send_message(message.channel, embed=summonerStats(str(message.author), str(message.author.id)))
-    if message.content.startswith('!lb change summoner'):
+    if message.content.startswith('!Lb change summoner'):
         text = messageTokenizor(message.content)
-        changeSummoner(getSummoner(text[4]), str(message.author))
+        registerRegion(str(message.author), text[4])
+        changeSummoner(getSummoner(text[4], str(message.author)), str(message.author))
         await client.send_message(message.channel, embed=changeSummonerMessage(str(message.author), str(message.author.id)))
 #Discord Bot Authentication data
 client.run(token)
