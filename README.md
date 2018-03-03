@@ -1,4 +1,4 @@
-<p align=center><a href="https://discordapp.com/api/oauth2/authorize?client_id=419157772421300235&permissions=384000&scope=bot" target="_blank"><img src="https://raw.githubusercontent.com/voxlap/League-Discord-Buddy/master/sunglasses.png" alt="logo"/></a></p>
+<p>______________________________________________<a href="https://discordapp.com/api/oauth2/authorize?client_id=419157772421300235&permissions=384000&scope=bot" target="_blank"><img src="https://raw.githubusercontent.com/voxlap/League-Discord-Buddy/master/sunglasses.png" alt="logo"/></a>______________________________________________</p>
 
 <hr />
 
