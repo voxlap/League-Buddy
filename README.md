@@ -1,19 +1,15 @@
-<hr />
-<p align="center">
-  <a href="https://discordapp.com/api/oauth2/authorize?client_id=419157772421300235&permissions=384000&scope=bot" target="_blank"><img       src="https://raw.githubusercontent.com/voxlap/League-Discord-Buddy/master/sunglasses.png"/</a>
-</p>
-<hr />
+<p align=center><a href="https://discordapp.com/api/oauth2/authorize?client_id=419157772421300235&permissions=384000&scope=bot" target="_blank"><img src="https://raw.githubusercontent.com/voxlap/League-Discord-Buddy/master/sunglasses.png" alt="logo" /></a></p>
 
 <h1 id="about">About</h1>
 <p>League-Buddy is a discord bot designed to help summoners monitor their gameplay improvements over time, by automatically sending messages to specified Discord server channels whenever a registered user in that server completes a match</p>
 
 <h1 id="commands">Commands</h1>
-<p>
+
 <table>
   <thead>
     <tr>
-      <th>Commands</th>
-      <th style="text-align: left">Description</th>
+      <th><strong>Commands</strong></th>
+      <th style="text-align: left"><strong>Description</strong></th>
     </tr>
   </thead>
   <tbody>
@@ -39,5 +35,6 @@
     </tr>
   </tbody>
 </table>
+
 <h1 id="contact">Contact</h1>
-<p>Contact me on Discord at voxlap#0194, email me at voxlap@gmail.com, or join the <a href="https://discord.gg/hgqmWPY">League-Buddy Support server</a>!</p>
+<p>Contact me on Discord at voxlap#0194, email me at voxlap@gmail.com, or join the <a href="https://discord.gg/hgqmWPY" target="_blank">League-Buddy Support server</a>!</p>
