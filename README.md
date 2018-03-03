@@ -1,5 +1,7 @@
 <p align=center><a href="https://discordapp.com/api/oauth2/authorize?client_id=419157772421300235&permissions=384000&scope=bot" target="_blank"><img src="https://raw.githubusercontent.com/voxlap/League-Discord-Buddy/master/sunglasses.png" alt="logo" /></a></p>
 
+<hr />
+
 <h1 id="about">About</h1>
 <p>League-Buddy is a discord bot designed to help summoners monitor their gameplay improvements over time, by automatically sending messages to specified Discord server channels whenever a registered user in that server completes a match</p>
 
