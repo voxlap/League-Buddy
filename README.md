@@ -1,19 +1,43 @@
+<hr />
 <p align="center">
   <a href="https://discordapp.com/api/oauth2/authorize?client_id=419157772421300235&permissions=384000&scope=bot" target="_blank"><img       src="https://raw.githubusercontent.com/voxlap/League-Discord-Buddy/master/sunglasses.png"/</a>
 </p>
-  
-# About
-League-Buddy is a discord bot designed to help summoners monitor their gameplay improvements over time, by automatically sending messages to specified Discord server channels whenever a registered user in that server completes a match
+<hr />
 
-# Commands
+<h1 id="about">About</h1>
+<p>League-Buddy is a discord bot designed to help summoners monitor their gameplay improvements over time, by automatically sending messages to specified Discord server channels whenever a registered user in that server completes a match</p>
 
-|**Commands**                | **Description**|                                                      
----|:---
-[!lb register [summoner name]](https://raw.githubusercontent.com/voxlap/League-Discord-Buddy/master/register.png)|Registers discord user with summoner
-[!lb change summoner [summoner name]](https://raw.githubusercontent.com/voxlap/League-Discord-Buddy/master/change.png)|Changes user's registered summoner
-[!lb summoner](https://raw.githubusercontent.com/voxlap/League-Discord-Buddy/master/summoner.png)|Shows summoners stats, including level, region, rank, and win rate||
-[!lb last match report](https://raw.githubusercontent.com/voxlap/League-Discord-Buddy/master/report.png)|Gives summary of user's performance during their last LoL match       
-[!lb last match team](https://raw.githubusercontent.com/voxlap/League-Discord-Buddy/master/team.png) |Gives summary of user's team's performance during their last LoL match
-
-# Contact
-Contact me on Discord at voxlap#0194, email me at voxlap@gmail.com, or join the [League-Buddy Support server](https://discord.gg/hgqmWPY)!
+<h1 id="commands">Commands</h1>
+<p>
+<table>
+  <thead>
+    <tr>
+      <th>Commands</th>
+      <th style="text-align: left">Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><a href="https://raw.githubusercontent.com/voxlap/League-Discord-Buddy/master/register.png" target="_blank">!lb register [summoner name]</a></td>
+      <td style="text-align: left">Registers discord user with summoner</td>
+    </tr>
+    <tr>
+      <td><a href="https://raw.githubusercontent.com/voxlap/League-Discord-Buddy/master/change.png" target="_blank">!lb change summoner [summoner name]</a></td>
+      <td style="text-align: left">Changes user’s registered summoner</td>
+    </tr>
+    <tr>
+      <td><a href="https://raw.githubusercontent.com/voxlap/League-Discord-Buddy/master/summoner.png" target="_blank">!lb summoner</a></td>
+      <td style="text-align: left">Shows summoners stats, including level, region, rank, and win rate</td>
+    </tr>
+    <tr>
+      <td><a href="https://raw.githubusercontent.com/voxlap/League-Discord-Buddy/master/report.png" target="_blank">!lb last match report</a></td>
+      <td style="text-align: left">Gives summary of user’s performance during their last LoL match</td>
+    </tr>
+    <tr>
+      <td><a href="https://raw.githubusercontent.com/voxlap/League-Discord-Buddy/master/team.png" target="_blank">!lb last match team</a></td>
+      <td style="text-align: left">Gives summary of user’s team’s performance during their last LoL match</td>
+    </tr>
+  </tbody>
+</table>
+<h1 id="contact">Contact</h1>
+<p>Contact me on Discord at voxlap#0194, email me at voxlap@gmail.com, or join the <a href="https://discord.gg/hgqmWPY">League-Buddy Support server</a>!</p>
