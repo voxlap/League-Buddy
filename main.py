@@ -5,7 +5,8 @@ from PIL import Image
 import requests
 from io import BytesIO
 
-base_url = 'https://na1.api.riotgames.com/lol/'
+base_url = '.api.riotgames.com/lol/'
+validRegions = ['NA1', 'RU', 'KR', 'PBE1', 'BR1', 'OC1', 'JP1', 'EUN1', 'EUW1', 'TR1', 'LA1', 'LA2']
 with open('Lolkey.txt', 'r+') as myfile:
     LoLkey = str(myfile.read())
 summoners = {}
@@ -20,9 +21,15 @@ with open('discordToken.txt', 'r+') as myfile:
 #           MESSAGES            #
 #################################
 
-    
+
+def registerRegion(discordUser, region):
+    if region in validRegions:
+        summonerRegion[discordUser] = region
+        return
+    return "Not a valid region, try again"
+
 def summonerStats(discordUser, userID):
-    league = requests.get('https://na1.api.riotgames.com/lol/league/v3/positions/by-summoner/'+ str(summoners[discordUser]['id']) + '?api_key=' + LoLkey).json()[0]
+    league = requests.get('https://' + summonerRegion[discordUser] + '.api.riotgames.com/lol/league/v3/positions/by-summoner/'+ str(summoners[discordUser]['id']) + '?api_key=' + LoLkey).json()[0]
     regionCode = 'NA'
     embed=discord.Embed(title='**Summoner Profile: ' + summoners[discordUser]['name'] +'**', color=0x0ee796)
     embed.set_thumbnail(url='http://ddragon.leagueoflegends.com/cdn/6.24.1/img/profileicon/' + str(summoners[discordUser]['profileIconId']) + '.png')
@@ -151,7 +158,7 @@ def getTeamResults(match):
 #################################
 
 def getLastMatch(account_id):
-    match = requests.get(base_url + 'match/v3/matches/' + str((requests.get(base_url + 'match/v3/matchlists/by-account/'
+    match = requests.get('https://' + summonerRegion[discordUser] + base_url + 'match/v3/matches/' + str((requests.get(base_url + 'match/v3/matchlists/by-account/'
                         + account_id + '/recent?api_key=' + LoLkey).json()['matches'][0]['gameId']))
                         + '/?api_key=' + LoLkey).json()
     addSummonerMatch(account_id, match)
@@ -169,7 +176,7 @@ def compareLastMatch(match):
     return
 
 def getChampName(champID):
-    message = requests.get(base_url + 'static-data/v3/champions/' + champID + '?locale=en_US&api_key=' + LoLkey).json()
+    message = requests.get('https://' + summonerRegion[discordUser] + base_url + 'static-data/v3/champions/' + champID + '?locale=en_US&api_key=' + LoLkey).json()
     return message['name']
 
 def getSummonerChamp(match, accountId):
@@ -203,11 +210,11 @@ def changeSummoner(summoner, discordID):
     print(summoners)
 
 def getSummoner(summonerName):
-    summoner = requests.get(base_url + 'summoner/v3/summoners/by-name/'+ summonerName + '?api_key=' + LoLkey).json()
+    summoner = requests.get('https://' + summonerRegion[discordUser] + base_url + 'summoner/v3/summoners/by-name/'+ summonerName + '?api_key=' + LoLkey).json()
     return summoner
 
 def registerSummoner(summoner, discordID):
-    if discordID not in summoners:
+    if discordID not in summoners.keys():
         summoners[discordID] = summoner 
     print(summoners)
     
