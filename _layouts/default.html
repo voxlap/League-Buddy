@@ -2,7 +2,11 @@
 <html lang="{{ site.lang | default: "en-US" }}">
   <head>
     <meta charset="UTF-8">
-
+    <style>
+        section{
+          background: #000000 url(http://www.yoursite.com/folder/image.jpg) 100% 100% no-repeat;
+        }
+     </style>
 {% seo %}
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="theme-color" content="#157878">
@@ -11,12 +15,7 @@
   </head>
   <body>
   <section class="page-header">
-      <style>
-        header  {
-          background-image: url("https://raw.githubusercontent.com/voxlap/League-Discord-Buddy/master/Site/banner.png");
-          background-color: #cccccc;
-        }
-      </style>
+      
       <h2 class="project-tagline">{{ site.description | default: site.github.project_tagline }}</h2>
       {% if site.github.is_project_page %}
         <a href="{{ site.github.repository_url }}" class="btn">View on GitHub</a>
