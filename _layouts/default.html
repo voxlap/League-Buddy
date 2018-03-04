@@ -11,9 +11,11 @@
   </head>
   <body>
   <section class="page-header">
-      .header-site{
+      <style>
+        .header-site{
           background: #000000 url(https://raw.githubusercontent.com/voxlap/League-Discord-Buddy/master/Site/banner.png) 100% 100% no-repeat;
         }
+      </style>
       <h2 class="project-tagline">{{ site.description | default: site.github.project_tagline }}</h2>
       {% if site.github.is_project_page %}
         <a href="{{ site.github.repository_url }}" class="btn">View on GitHub</a>
