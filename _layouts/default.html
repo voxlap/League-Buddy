@@ -1,50 +1,139 @@
-<!DOCTYPE html>
-<html lang="{{ site.lang | default: "en-US" }}">
-  <head>
+<html lang="en-US"><head>
     <meta charset="UTF-8">
     
-{% seo %}
+<!-- Begin Jekyll SEO tag v2.3.0 -->
+<title>League-Buddy | League of Legends Discord bot, gives basic match summaries, summoner stats and more</title>
+<meta property="og:title" content="League-Buddy">
+<meta property="og:locale" content="en_US">
+<meta name="description" content="League of Legends Discord bot, gives basic match summaries, summoner stats and more">
+<meta property="og:description" content="League of Legends Discord bot, gives basic match summaries, summoner stats and more">
+<link rel="canonical" href="https://voxlap.github.io/League-Buddy/">
+<meta property="og:url" content="https://voxlap.github.io/League-Buddy/">
+<meta property="og:site_name" content="League-Buddy">
+<script type="application/ld+json">
+{"name":"League-Buddy","description":"League of Legends Discord bot, gives basic match summaries, summoner stats and more","author":null,"@type":"WebSite","url":"https://voxlap.github.io/League-Buddy/","image":null,"publisher":null,"headline":"League-Buddy","dateModified":null,"datePublished":null,"sameAs":null,"mainEntityOfPage":null,"@context":"http://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="theme-color" content="#157878">
-    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
-    <link rel="stylesheet" href="{{ '/assets/css/style.css?v=' | append: site.github.build_revision | relative_url }}">
-  </head>
-  <body>
-  <section class="page-header">
-      <style>
-        .header-site{
-          background: #000000 url(https://raw.githubusercontent.com/voxlap/League-Discord-Buddy/master/Site/banner.png) 100% 100% no-repeat;
-        }
-      </style>
-      <h2 class="project-tagline">{{ site.description | default: site.github.project_tagline }}</h2>
-      {% if site.github.is_project_page %}
-        <a href="{{ site.github.repository_url }}" class="btn">View on GitHub</a>
-      {% endif %}
-      <a href="https://discordapp.com/api/oauth2/authorize?client_id=419157772421300235&permissions=384000&scope=bot" class="btn">Invite to server!</a>
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,700" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" href="/League-Buddy/assets/css/style.css?v=967f89fbe1b2fa7ed2402ebd22b329eb3a56ca23">
+  <style id="__web-inspector-hide-shortcut-style__" type="text/css">
+.__web-inspector-hide-shortcut__, .__web-inspector-hide-shortcut__ *, .__web-inspector-hidebefore-shortcut__::before, .__web-inspector-hideafter-shortcut__::after
+{
+    visibility: hidden !important;
+}
+    .button {
+  display: inline-block;
+  border-radius: 4px;
+  background-color: #3681f9;
+  border: none;
+  color: #FFFFFF;
+  text-align: center;
+  font-size: 28px;
+  padding: 20px;
+  width: 200px;
+  transition: all 0.5s;
+  cursor: pointer;
+  margin: 5px;
+}
 
+.button span {
+  cursor: pointer;
+  display: inline-block;
+  position: relative;
+  transition: 0.5s;
+}
+
+.button span:after {
+  content: '\00bb';
+  position: absolute;
+  opacity: 0;
+  top: 0;
+  right: -20px;
+  transition: 0.5s;
+}
+
+.button:hover span {
+  padding-right: 25px;
+}
+
+.button:hover span:after {
+  opacity: 1;
+  right: 0;
+}
+</style>
+    </head><body><section class="page-header">
+	<style>
+        section.page-header {
+            background-image:url(https://raw.githubusercontent.com/voxlap/League-Discord-Buddy/master/Site/banner.png);
+		background-repeat: no-repeat;
+    	background-position: center; 
+        height: 300px;
+		}
+    </style>
+      <a href="{{ site.github.repository_url }}" class="button"><span>View on GitHub</span>
+    
+    </a>
+    <a href="https://discordapp.com/api/oauth2/authorize?client_id=419157772421300235&amp;permissions=384000&amp;scope=bot" class="button"><span>Invite to server!</span>
+    
+    </a>
 </section>
 
     <section class="main-content">
-      {{ content }}
+      <p align="center"></p>
+
+
+
+<h1 id="about">About</h1>
+<p>League-Buddy is a discord bot designed to help summoners monitor their gameplay improvements over time, by automatically sending messages to specified Discord server channels whenever a registered user in that server completes a match</p>
+
+<h1 id="commands">Commands</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th><strong>Commands</strong></th>
+      <th style="text-align: left"><strong>Description</strong></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><a href="https://raw.githubusercontent.com/voxlap/League-Discord-Buddy/master/Site/register.png" target="_blank">lb! register [region][summoner name]</a></td>
+      <td style="text-align: left">Registers discord user with summoner</td>
+    </tr>
+    <tr>
+      <td><a href="https://raw.githubusercontent.com/voxlap/League-Discord-Buddy/master/Site/change.png" target="_blank">lb! change summoner [region][summoner name]</a></td>
+      <td style="text-align: left">Changes user’s registered summoner</td>
+    </tr>
+    <tr>
+      <td><a href="https://raw.githubusercontent.com/voxlap/League-Discord-Buddy/master/Site/summoner.png" target="_blank">lb! summoner</a></td>
+      <td style="text-align: left">Shows summoners stats, including level, region, rank, and win rate</td>
+    </tr>
+    <tr>
+      <td><a href="https://raw.githubusercontent.com/voxlap/League-Discord-Buddy/master/Site/report.png" target="_blank">lb! last match report</a></td>
+      <td style="text-align: left">Gives summary of user’s performance during their last LoL match</td>
+    </tr>
+    <tr>
+      <td><a href="https://raw.githubusercontent.com/voxlap/League-Discord-Buddy/master/Site/team.png" target="_blank">lb! last match team</a></td>
+      <td style="text-align: left">Gives summary of user’s team’s performance during their last LoL match</td>
+    </tr>
+  </tbody>
+</table>
+
+<h1 id="contact">Contact</h1>
+<p>Contact me on Discord at voxlap#0194, email me at voxlap@gmail.com, or join the <a href="https://discord.gg/hgqmWPY" target="_blank">League-Buddy Support server</a>!</p>
+
 
       <footer class="site-footer">
-        {% if site.github.is_project_page %}
-          <span class="site-footer-owner"><a href="{{ site.github.repository_url }}">{{ site.github.repository_name }}</a> is maintained by <a href="{{ site.github.owner_url }}">{{ site.github.owner_name }}</a>.</span>
-        {% endif %}
+        
+          <span class="site-footer-owner"><a href="https://github.com/voxlap/League-Buddy">League-Buddy</a> is maintained by <a href="https://github.com/voxlap">voxlap</a>.</span>
+        
         <span class="site-footer-credits">This page was generated by <a href="https://pages.github.com">GitHub Pages</a>.</span>
       </footer>
     </section>
 
-    {% if site.google_analytics %}
-      <script type="text/javascript">
-        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-        })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+    
+  
 
-        ga('create', '{{ site.google_analytics }}', 'auto');
-        ga('send', 'pageview');
-      </script>
-    {% endif %}
-  </body>
-</html>
+</body></html>
