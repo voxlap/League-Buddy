@@ -111,10 +111,8 @@ def lastMatchTeamMessage(match, teamID, userID):
 
 def getChampID(champ):
     champs = requests.get('https://na1.api.riotgames.com/lol/static-data/v3/champions?locale=en_US&dataById=false&api_key=' + LoLkey).json()
-    print(champs)
     for i in range(len(champs['data'])):
         if str(list(champs['data'].keys())[i]) == str(champ):
-            print(champs['data'][list(champs['data'].keys())[i]]['id'])
             return champs['data'][list(champs['data'].keys())[i]]['id']
  
 def getEmoji(champName):
