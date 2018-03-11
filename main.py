@@ -30,9 +30,7 @@ def registerRegion(discordUser, region):
     return "Not a valid region, try again"
 
 def summonerStats(discordUser, userID):
-    print(summonerRegion[discordUser])
     league = requests.get('https://' + str(summonerRegion[discordUser]) + '.api.riotgames.com/lol/league/v3/positions/by-summoner/'+ str(summoners[discordUser]['id']) + '?api_key=' + LoLkey).json()
-    print(league)
     league = league[0]
     regionCode = summonerRegion[discordUser]
     embed=discord.Embed(title='**Summoner Profile: ' + summoners[discordUser]['name'] +'**', color=0x0ee796)
@@ -42,14 +40,36 @@ def summonerStats(discordUser, userID):
     embed.add_field(name='LP', value=league['leaguePoints'], inline=True)
     embed.add_field(name='Rank in ' + league['queueType'], value=league['tier'] + ' ' + league['rank'] + ', ' + str(league['wins']) + 'W/' + str(league['losses']) + 'L', inline=True)
     embed.add_field(name='Region', value=regionCode, inline=True)
-    
-
-
-
-
-
-    
     return embed
+
+def champMessage(champ):
+    champData = requests.get('https://na1.api.riotgames.com/lol/static-data/v3/champions/' + str(getChampID(champ)) + '?locale=en_US&champData=all&tags=all&api_key=' + LoLkey).json()
+    embed=discord.Embed(title='**Champion: ' + champData['key'] + ' ' + champData['title'] +'**', color=0x0ee796)
+    embed.set_thumbnail(url='http://ddragon.leagueoflegends.com/cdn/8.5.2/img/champion/' + champData['key'] + '.png')
+    allyTips = ayallyTips(champData['allytips'])
+    enemyTips = ayenemyTips(champData['enemytips'])
+    embed.add_field(name='Ally Tips', value=allyTips, inline=False)
+    embed.add_field(name='Enemy Tips', value=enemyTips, inline=False)
+    embed.add_field(name='Attack Damage:', value=champData['stats']['attackdamage'], inline=True)
+    embed.add_field(name='MP:', value=champData['stats']['mp'], inline=True)
+    embed.add_field(name='HP:', value=champData['stats']['hp'], inline=True)
+    embed.add_field(name='Armor:', value=champData['stats']['armor'], inline=True)
+    embed.add_field(name='Movespeed:', value=champData['stats']['movespeed'], inline=True)
+    embed.add_field(name='Attack Range:', value=champData['stats']['attackrange'], inline=True)
+    return embed
+
+def ayallyTips(tipList):
+    message = str()
+    for i in range(len(tipList)):
+        message += ':small_blue_diamond: ' + tipList[i] + '\n'
+    return message
+
+def ayenemyTips(tipList):
+    message = str()
+    for i in range(len(tipList)):
+        message += ':small_orange_diamond: ' + tipList[i] + '\n'
+    return message
+
 
 def lastMatchMessage(DISCORD_USER, server, userID, match):
     teamID = getTeam(match, summoners[DISCORD_USER]['accountId'])
@@ -74,21 +94,29 @@ def lastMatchMessage(DISCORD_USER, server, userID, match):
     embed.add_field(name='Penta Kills:', value=str(stats['pentaKills']), inline=True)
     embed.add_field(name='Unreal Kills:', value=str(stats['unrealKills']), inline=True)
     embed.set_footer(text='Thanks for using League-Buddy!')
-
     return embed
 
 def lastMatchTeamMessage(match, teamID, userID):
     embed=discord.Embed(title='**Summoner\'s Team Performance:**', description='<@' + userID + '>' + '\'s team\'s statistics during their last match', color=0x0ee796)
-    embed.add_field(name='Kills', value=totalTeamKills(match, teamID), inline=True)
-    embed.add_field(name='Deaths', value=totalTeamDeaths(match, teamID), inline=True)
+    embed.add_field(name='Kills', value=':crossed_swords:' + ' ' + str(totalTeamKills(match, teamID)), inline=True)
+    embed.add_field(name='Deaths', value=':skull:' + ' ' + str(totalTeamDeaths(match, teamID)), inline=True)
     embed.add_field(name='Towers Killed', value=totalTeamTowerKills(match, teamID), inline=False)
     embed.add_field(name='Inhibitor Kills', value=totalTeamInhibitorKills(match, teamID), inline=True)
-    embed.add_field(name='Dragons Killed', value=totalTeamDragonKills(match, teamID), inline=True)
+    embed.add_field(name='Dragons Killed', value=':dragon:' + ' ' + str(totalTeamDragonKills(match, teamID)), inline=True)
     embed.add_field(name='Barons Killed', value=totalTeamBaronKills(match, teamID), inline=True)
     embed.add_field(name='Rift Herald Kills', value=totalTeamRiftHeraldKills(match, teamID), inline=True)
     embed.add_field(name='Vilemaws Killed', value=totalTeamVilemawKills(match, teamID), inline=True)
-
     return embed
+
+
+def getChampID(champ):
+    champs = requests.get('https://na1.api.riotgames.com/lol/static-data/v3/champions?locale=en_US&dataById=false&api_key=' + LoLkey).json()
+    print(champs)
+    for i in range(len(champs['data'])):
+        if str(list(champs['data'].keys())[i]) == str(champ):
+            print(champs['data'][list(champs['data'].keys())[i]]['id'])
+            return champs['data'][list(champs['data'].keys())[i]]['id']
+ 
 def getEmoji(champName):
     champName = str(champName).replace(" ", "")
     champName = str(champName).replace('\'', '')
@@ -123,7 +151,6 @@ def sendCustomIconEmoji(icon):
                 for j in range(len(list(client.servers)[i].emojis)):
                     if list(client.servers)[i].emojis[j].name == icon:
                         emojiID = str(list(client.servers)[i].emojis[j].id)
-                        print(emojiID)
                         return '<:'+ icon +':' + emojiID + '>'
                     
                     
@@ -283,8 +310,6 @@ def getParticipantID(match, accountID):
 
 ##############################################################################
 
-
-
 def messageTokenizor(message):
     tokens = nltk.word_tokenize(message)
     return tokens
@@ -327,5 +352,8 @@ async def on_message(message):
     if message.content.startswith('lb! oof'):
         text = messageTokenizor(message.content)
         await client.send_message(message.channel, sendCustomIconEmoji(text[3]))
+    if message.content.startswith('lb! champion'):
+        text = messageTokenizor(message.content)
+        await client.send_message(message.channel, embed=champMessage(text[3]))
 #Discord Bot Authentication data
 client.run(token)
