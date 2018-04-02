@@ -3,7 +3,7 @@
 <hr />
 
 <h1 id="about">About</h1>
-<p>League-Buddy is a discord bot designed to help summoners monitor their gameplay improvements over time, by automatically sending messages to specified Discord server channels whenever a registered user in that server completes a match</p>
+<p>League-Buddy is a discord bot designed to help summoners monitor their gameplay improvements over time, give tips and tricks for mastering champions, and help to finally settle who is the best summoner in a given guild</p>
 
 <h1 id="commands">Commands</h1>
 
