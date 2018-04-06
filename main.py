@@ -4,6 +4,8 @@ import requests
 from PIL import Image
 import requests
 from io import BytesIO
+import ast
+import os.path
 
 base_url = '.api.riotgames.com/lol/'
 validRegions = ['NA1', 'RU', 'KR', 'PBE1', 'BR1', 'OC1', 'JP1', 'EUN1', 'EUW1', 'TR1', 'LA1', 'LA2']
@@ -16,6 +18,26 @@ client = discord.Client()
 summonerRegion = {}
 with open('discordToken.txt', 'r+') as myfile:
     token = str(myfile.read())
+
+
+
+
+"""
+def matches(author):
+    if os.path.isfile('summoners\\' + author.id + 'recentMatches.txt'):
+        matchIDs = []
+        with open('summoners\\' + author.id + 'recentMatches.txt') as myFile:
+            matchIDs = myFile.read().split
+        mostRecentID = matchIDs[0]
+        if os.path.isfile('summoners\\' + author.id + 'mostRecentMatch_' + mostRecentID + '.txt'):
+            with open('summoners\\' + author.id + 'mostRecentMatch_' + mostRecentID + '.txt') as myFile:
+            mostRecentMatch = 
+"""
+
+
+
+
+
 
 #################################
 #           MESSAGES            #
@@ -43,6 +65,12 @@ def summonerStats(discordUser, userID):
     return embed
 
 def champMessage(champ):
+    if os.path.isfile('champMessages\\' + champ + 'champMessage.txt'):
+        return champPresent(champ)
+        
+    return champNotPresent(champ)
+    
+def champNotPresent(champ):
     champData = requests.get('https://na1.api.riotgames.com/lol/static-data/v3/champions/' + str(getChampID(champ)) + '?locale=en_US&champData=all&tags=all&api_key=' + LoLkey).json()
     embed=discord.Embed(title='**Champion: ' + champData['key'] + ' ' + champData['title'] +'**', color=0x0ee796)
     embed.set_thumbnail(url='http://ddragon.leagueoflegends.com/cdn/8.5.2/img/champion/' + champData['key'] + '.png')
@@ -56,7 +84,30 @@ def champMessage(champ):
     embed.add_field(name='Armor:', value=champData['stats']['armor'], inline=True)
     embed.add_field(name='Movespeed:', value=champData['stats']['movespeed'], inline=True)
     embed.add_field(name='Attack Range:', value=champData['stats']['attackrange'], inline=True)
+    
+    with open('champMessages\\' + champ + 'champMessage.txt', 'w+') as myFile:
+        myFile.seek(0, 2)
+        myFile.write(str(embed.to_dict()))
     return embed
+
+def champPresent(champ):
+    embedFile = {}
+    with open('champMessages\\' + champ + 'champMessage.txt', 'r') as myFile:
+        embedFile = ast.literal_eval(myFile.read())
+        print(str(embedFile))
+    embed=discord.Embed(title=embedFile['title'], color=0x0ee796)
+    embed.set_thumbnail(url=embedFile['thumbnail']['url'])
+    embed.add_field(name='Ally Tips', value=embedFile['fields'][0]['value'], inline=False)
+    embed.add_field(name='Enemy Tips', value=embedFile['fields'][1]['value'], inline=False)
+    embed.add_field(name='Attack Damage:', value=embedFile['fields'][2]['value'], inline=True)
+    embed.add_field(name='MP:', value=embedFile['fields'][3]['value'], inline=True)
+    embed.add_field(name='HP:', value=embedFile['fields'][4]['value'], inline=True)
+    embed.add_field(name='Armor:', value=embedFile['fields'][5]['value'], inline=True)
+    embed.add_field(name='Movespeed:', value=embedFile['fields'][6]['value'], inline=True)
+    embed.add_field(name='Attack Range:', value=embedFile['fields'][7]['value'], inline=True)
+    print(embed.to_dict())
+    return embed
+
 
 def ayallyTips(tipList):
     message = str()
@@ -353,5 +404,8 @@ async def on_message(message):
     if message.content.startswith('lb! champion'):
         text = messageTokenizor(message.content)
         await client.send_message(message.channel, embed=champMessage(text[3]))
+    if message.content.startswith('lb! set user summoner'):
+        text = messageTokenizor(message.content)
+        await client.send_message(message.channel, embed=setUserSummoner(text[3]))
 #Discord Bot Authentication data
 client.run(token)
