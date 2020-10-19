@@ -37,6 +37,3 @@
     </tr>
   </tbody>
 </table>
-
-<h1 id="contact">Contact</h1>
-<p>Contact me on Discord at voxlap#0194, email me at voxlap@gmail.com, or join the <a href="https://discord.gg/hgqmWPY" target="_blank">League-Buddy Support server</a>!</p>
